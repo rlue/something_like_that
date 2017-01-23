@@ -1,0 +1,14 @@
+require: rubocop-rspec
+
+Style/AlignHash:
+  EnforcedHashRocketStyle: table
+  EnforcedColonStyle: table
+
+Style/AndOr:
+  EnforcedStyle: conditionals
+
+Style/FrozenStringLiteralComment:
+  EnforcedStyle: never
+
+Style/RedundantSelf:
+  Enabled: false
