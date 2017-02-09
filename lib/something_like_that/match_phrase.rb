@@ -1,26 +1,37 @@
 module SomethingLikeThat
-  # This library performs fuzzy string comparison _asymmetrically_.
-  # Queries (subclass of this class) may be short/abbreviated/truncated;
-  # MatchPhrases should be complete.
+  # Stores a string as an array of words (MatchTokens).
+  # Can be compared to Queries to generate a similarity score.
+  # Queries may be abbreviated/truncated; MatchPhrases should be complete.
   class MatchPhrase < Array
+    attr_reader :phrase
+
     def initialize(phrase)
-      super tokenize(phrase.downcase)
       @phrase = phrase
+      super tokens
     end
 
     def to_s
-      @phrase
+      phrase
     end
 
     def delete_once(token)
       delete_at(index(token)) unless index(token).nil?
     end
 
+    def restore
+      clear
+      concat tokens
+    end
+
     private
 
-    # TODO: clean up all non-word characters
-    def tokenize(phrase)
-      phrase.split(/[^\w']/).map { |word| MatchToken.new(word) }
+    # TODO: lump determiners and prepositions in with their subjects?
+    def tokens
+      words.map { |word| MatchToken.new(word, self) }
+    end
+
+    def words
+      phrase.split(/[^\w']/).reject(&:empty?)
     end
   end
 end

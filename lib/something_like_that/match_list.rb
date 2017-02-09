@@ -2,10 +2,14 @@ module SomethingLikeThat
   # A list of MatchTokens corresponding to each token in the given Query phrase.
   # Each element is the corresponding Query token's highest-scoring match from
   # the candidate MatchPhrase.
+  # TODO: Integrate whole class into Query?
   class MatchList < Array
+    attr_reader :query, :this_phrase, :that_phrase
+
     def initialize(query, candidate)
       super(query.length)
-      @this_phrase = query
+      @query = query
+      @this_phrase = query.dup
       @that_phrase = candidate
       find_matches until none?(&:nil?)
     end
@@ -13,14 +17,7 @@ module SomethingLikeThat
     private
 
     def find_matches
-      @this_phrase.each.with_index do |this_token, i|
-        next unless self[i].nil?
-        that_token = this_token.best_match_in(@that_phrase)
-        next unless that_token.is_a?(NilToken) or 
-                    this_token == that_token.best_match_in(@this_phrase)
-        self[i] = that_token
-        @that_phrase.delete_once(that_token)
-      end
+      query.map { |this_token| this_token.find_match_in(that_phrase) }
     end
   end
 end

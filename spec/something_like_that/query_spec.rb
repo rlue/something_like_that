@@ -3,26 +3,22 @@ RSpec.describe SomethingLikeThat::Query do
   let(:query) { SomethingLikeThat::Query.new(query_string) }
 
   describe '#match' do
-    context 'with identical candidates' do
-      it 'returns 1' do
-        expect(query.match(query_string)).to eq(1)
-      end
-
-      it 'is case-insensitive' do
-        expect(query.match(query_string.upcase)).to eq(1)
-      end
+    it 'doesn\'t care about order' do
+      expect(query.match(query_string)).to eq(query.match('bad ugly good'))
     end
 
-    context 'with extraneous words' do
-      it 'still returns 1' do
-        expect(query.match('The Good, the Bad, and the Ugly')).to eq(1)
-      end
+    it 'is case-insensitive' do
+      expect(query.match(query_string)).to eq(query.match('GOOD BAD UGLY'))
     end
 
-    context 'with typos' do
-      it 'accepts matches above the threshold' do
-        expect(query.match('Ugly, Bad God')).to be > 0.8
-      end
+    it 'ignores words not present in query' do
+      expect(query.match(query_string)).
+        to eq(query.match('The Good, the Bad, and the Ugly'))
+    end
+
+    it 'averages resulting scores' do
+      expect(query.match('Ugly Bat God')).to be_within(0.01).of(0.92)
+      expect(SomethingLikeThat::Query.new('Lenovo inc').match('Lenovo corp.')).to be_within(0.01).of(0.71)
     end
   end
 end

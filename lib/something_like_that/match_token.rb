@@ -1,36 +1,40 @@
 module SomethingLikeThat
-  # For individual words in match phrases
-  # TODO: add flag if word is common
-  class MatchToken
-    @@threshold = 0.8
+  # For comparing individual words in match phrases
+  class MatchToken < String
+    class << self; attr_accessor :threshold end
+    attr_reader :jaro_winkler, :parent_phrase
 
-    class << self
-      def threshold
-        @@threshold
+    DEFAULT_THRESHOLD = 0.8
+    @threshold = DEFAULT_THRESHOLD
+
+    def initialize(word, parent_phrase='')
+      super format(word)
+      @jaro_winkler  = Amatch::JaroWinkler.new(self)
+      @parent_phrase = parent_phrase.dup
+    end
+
+    def best_match_in(match_phrase, bidirectional=false)
+      match = match_phrase.max_by { |match_token| score(match_token) }
+      if bidirectional && this_token != that_token.best_match_in(this_phrase)
+        # then what?
+        # blacklist that_token and that_token.best_match_in(this_phrase)
+        # then best_match_in again
       end
-
-      def threshold=(value)
-        @@threshold = value
-      end
-    end
-
-    def initialize(word)
-      @word     = word
-      @amatcher = Amatch::JaroWinkler.new(word)
-    end
-
-    def to_s
-      @word
-    end
-
-    def best_match_in(match_phrase)
-      winner = match_phrase.max_by { |match_token| score(match_token) }
-      score(winner) > @@threshold ? winner : NilToken.new
+      match?(that_token) ? that_token : MatchToken.new('')
     end
 
     def score(match_token)
-      return 0 if match_token.is_a?(NilToken)
-      @amatcher.match(match_token.to_s)
+      jaro_winkler.match(match_token)
+    end
+
+    private
+
+    def format(word)
+      word.downcase.gsub(/[^\w]/, '')
+    end
+
+    def match?(match_token)
+      score(match_token) > self.class.threshold
     end
   end
 end
