@@ -18,8 +18,12 @@ RSpec.describe SomethingLikeThat::Query do
       expect(test_query.match('Marry Potner')).to be_within(0.001).of(0.895)
     end
 
-    it 'ignores additional words' do
+    it 'ignores additional words in MatchPhrase' do
       expect(test_query.match('Harry Potter and the Goblet of Fire')).to eq(1)
+    end
+
+    it 'penalizes for own additional words' do
+      expect(test_query.match('Potter')).to be_within(0.001).of(0.707)
     end
   end
 
