@@ -1,24 +1,39 @@
 RSpec.describe SomethingLikeThat::Query do
-  let(:query_string) { 'good bad ugly' }
-  let(:query) { SomethingLikeThat::Query.new(query_string) }
+  let(:test_query) { described_class.new('Harry Potter') }
 
   describe '#match' do
-    it 'doesn\'t care about order' do
-      expect(query.match(query_string)).to eq(query.match('bad ugly good'))
+    it 'handles identical strings' do
+      expect(test_query.match('Harry Potter')).to eq(1)
     end
 
     it 'is case-insensitive' do
-      expect(query.match(query_string)).to eq(query.match('GOOD BAD UGLY'))
+      expect(test_query.match('harry potter')).to eq(1)
     end
 
-    it 'ignores words not present in query' do
-      expect(query.match(query_string)).
-        to eq(query.match('The Good, the Bad, and the Ugly'))
+    it 'ignores order' do
+      expect(test_query.match('Potter Harry')).to eq(1)
     end
 
-    it 'averages resulting scores' do
-      expect(query.match('Ugly Bat God')).to be_within(0.01).of(0.92)
-      expect(SomethingLikeThat::Query.new('Lenovo inc').match('Lenovo corp.')).to be_within(0.01).of(0.71)
+    it 'averages (p=2) individual Jaro-Winkler scores' do
+      expect(test_query.match('Marry Potner')).to be_within(0.001).of(0.895)
+    end
+
+    it 'ignores additional words' do
+      expect(test_query.match('Harry Potter and the Goblet of Fire')).to eq(1)
+    end
+  end
+
+  describe '#match?' do
+    it 'spots identical strings' do
+      expect(test_query.match?('Harry Potter')).to be(true)
+    end
+
+    it 'spots similar strings' do
+      expect(test_query.match?('Hairy Poster')).to be(true)
+    end
+
+    it 'spots dissimilar strings' do
+      expect(test_query.match?('Hurdy Gurdy')).to be(false)
     end
   end
 end
