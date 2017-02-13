@@ -1,5 +1,8 @@
 require: rubocop-rspec
 
+AllCops:
+  TargetRubyVersion: 2.4
+
 Style/AlignHash:
   EnforcedHashRocketStyle: table
   EnforcedColonStyle: table
@@ -12,3 +15,7 @@ Style/FrozenStringLiteralComment:
 
 Style/RedundantSelf:
   Enabled: false
+
+Metrics/BlockLength:
+  Exclude:
+    - "**/*_spec.rb"
