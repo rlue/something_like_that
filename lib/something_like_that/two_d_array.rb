@@ -1,28 +1,31 @@
 require 'ostruct'
 
 module SomethingLikeThat
-  # Holds an n-dimensional numeric array.
+  # Holds a 2-dimensional numeric array.
   # Unstable. We're holding out for a better numeric array library...
-  class NDArray < Array
+  class TwoDArray < Array
     def initialize(array)
-      unless array.flatten.all? { |elt| elt.is_a?(Numeric) }
-        raise ArgumentError, 'non-numeric values detected'
-      end
       super array
     end
 
     # TODO: rename (incl. corresponding method call in Scorer)
     def maxima
-      max_vals = []
+      max_vals = Array.new(length)
       double = dup
-      max_vals.push(double.pop_max) until double.empty?
-      max_vals
+      max_vals.map.with_index { |_, i| i < lengths.min ? double.pop_max : 0 }
     end
 
     def pop_max
       max = flatten.max
       eliminate(coords(max))
       max
+    end
+
+    def lengths
+      x = length
+      y = map(&:length).max
+      min, max = [x, y].minmax
+      OpenStruct.new(x: x, y: y, min: min, max: max)
     end
 
     private

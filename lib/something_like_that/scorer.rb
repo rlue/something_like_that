@@ -45,7 +45,7 @@ module SomethingLikeThat
 
     private
 
-    def top_scores(candidate_tokens, max_finder = NDArray)
+    def top_scores(candidate_tokens, max_finder = TwoDArray)
       all_scores = tokenwise_score_table(candidate_tokens)
       max_finder.new(all_scores).maxima
     end
