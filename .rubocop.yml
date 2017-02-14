@@ -16,6 +16,10 @@ Style/FrozenStringLiteralComment:
 Style/RedundantSelf:
   Enabled: false
 
+Style/MutableConstant:
+  Exclude:
+    - "**/version.rb"
+
 Metrics/BlockLength:
   Exclude:
     - "**/*_spec.rb"
