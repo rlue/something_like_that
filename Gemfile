@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'amatch'
+gemspec
 
 group :development do
   gem 'rspec'
