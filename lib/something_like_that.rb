@@ -1,6 +1,3 @@
-require 'bundler'
-Bundler.setup
-
 require 'something_like_that/match_phrase'
 require 'something_like_that/match_phrase/query'
 require 'something_like_that/scorer'
