@@ -10,13 +10,12 @@ Gem::Specification.new do |spec|
 
   spec.summary       = 'Fuzzy string matching for long, multi-word phrases.'
   spec.description   = 'See how closely two long, multi-word phrases ' \
-                       'match each other.' \
-                       "\n\n" \
-                       'Something Like That is asymmetrical, meaning ' \
-                       '“Azkaban” will match “Harry Potter and the ' \
-                       'Prisoner of Azkaban” much more strongly than ' \
-                       'vice versa. Great for ordering search results ' \
-                       'gathered from diverse sources.'
+                       'match each other. Something Like That is ' \
+                       'asymmetrical, meaning “Azkaban” will match ' \
+                       '“Harry Potter and the Prisoner of Azkaban” much ' \
+                       'more strongly than vice versa. Great for ' \
+                       'ordering search results gathered from diverse ' \
+                       'sources.'
   spec.homepage      = 'https://github.com/rlue/something_like_that'
   spec.license       = 'MIT'
 
@@ -24,5 +23,6 @@ Gem::Specification.new do |spec|
                           f.match(%r{^(spec/|\.\w)})
                         end
   spec.require_paths = ['lib']
+  spec.required_ruby_version = '>= 2.3.0'
   spec.add_runtime_dependency 'amatch', '~> 0.3'
 end
