@@ -1,4 +1,3 @@
-lib = File.expand_path('../lib', __FILE__)
 require 'something_like_that/version'
 
 Gem::Specification.new do |spec|
