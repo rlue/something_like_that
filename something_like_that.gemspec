@@ -1,4 +1,4 @@
-require 'something_like_that/version'
+require File.expand_path('../lib/something_like_that/version', __FILE__)
 
 Gem::Specification.new do |spec|
   spec.name          = 'something_like_that'
